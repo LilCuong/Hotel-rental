@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+<th:block th:insert="~{/client/fragments.html :: head-elms}"></th:block>
+<title>Sona | Template</title>
+</head>
+
+<body>
+	<th:block th:insert="~{/client/fragments.html :: preloader-elm}"></th:block>
+	<th:block th:insert="~{/client/fragments.html :: header-elm}"></th:block>
+
+	<!-- Phần BreadCrumb -->
+	<div class="breadcrumb-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="breadcrumb-text">
+						<h2>Phòng đã thuê</h2>
+						<div class="bt-option">
+							<a href="./home.html">Phòng</a> <span>Phòng đã thuê</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container pb-4">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Phòng</th>
+					<th scope="col">Dịch vụ</th>
+					<th scope="col">Tổng tiền</th>
+					<th scope="col">Ngày đặt phòng</th>
+					<th scope="col">Trạng thái</th>
+					<th scope="col">Hoạt động</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="order : ${orders}">
+					<th scope="row" th:text="${order.id}"></th>
+
+					<td><span th:each="roomOrder : ${order.roomOrders}"> <span
+							th:text="${roomOrder.name}"></span> <text
+								th:if="${roomOrder.type == 'SINGLE'}">(Phòng đơn)</text> <text
+								th:if="${roomOrder.type == 'COUPLE'}">(Phòng đôi)</text> <text
+								th:if="${roomOrder.type == 'FAMILY'}">(Phòng gia đình)</text> <text
+								th:if="${roomOrder.type == 'LUXURY'}">(Phòng cao cấp)</text> <br>
+					</span></td>
+					<td><span th:each="serviceOrder : ${order.serviceOrders}">
+							<span
+							th:text="${serviceOrder.name} + ' x ' + ${serviceOrder.quantity}"></span>
+							<button type="button"
+								class="btn btn-outline-primary px-1 py-0 mb-1"
+								data-toggle="modal"
+								th:attr="data-target='#exampleModalCenter-note' + ${serviceOrder.id}">Ghi
+								chú</button>
+
+							<form method="post" action="/client/logs/update-service-note">
+								<div class="modal fade"
+									th:id="'exampleModalCenter-note' + ${serviceOrder.id}"
+									tabindex="-1" role="dialog"
+									aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered" role="document">
+										<div class="modal-content">
+
+											<div class="modal-body">
+												<input name="id" th:value="${serviceOrder.id}" hidden>
+
+												<div class="form-group">
+													<label for="exampleFormControlTextarea1">Viết ghi
+														chú cho dịch vụ <span class="font-weight-bold"
+														th:text="${serviceOrder.name}"></span>
+													</label>
+													<textarea class="form-control"
+														id="exampleFormControlTextarea1" rows="3" name="note"
+														th:text="${serviceOrder.note}"></textarea>
+
+												</div>
+
+
+											</div>
+											<div class="modal-footer border-top-0">
+												<button type="button" class="btn btn-secondary"
+													data-dismiss="modal">Hủy</button>
+												<button type="submit" class="btn btn-primary" th:disabled="${order.status == 'EXPIRED'}">Lưu
+													ghi chú</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+
+					</span></td>
+					<td
+						th:text="${#numbers.formatDecimal(order.total ,1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+					<td><span class="d-flex justify-content-between"> <text>Ngày
+							nhận phòng: </text> <text
+								th:text="${#dates.format(order.startDate, 'dd/MM/yyyy')}"></text>
+					</span> <span class="d-flex justify-content-between"> <text>Ngày
+							trả phòng: </text> <text
+								th:text="${#dates.format(order.endDate, 'dd/MM/yyyy')}"></text>
+					</span></td>
+					<td><span th:if="${order.status == 'WAITING'}"
+						class="text-uppercase p-2 badge badge-secondary">Đang chờ</span> <span
+						th:if="${order.status == 'LIVING'}"
+						class="text-uppercase p-2 badge badge-success">Đã Nhận
+							phòng </span> <span th:if="${order.status == 'EXPIRED'}"
+						class="text-uppercase p-2 badge badge-primary">Đã trả phòng</span>
+					</td>
+					<td>
+						<button type="button" class="btn btn-outline-primary p-1"
+							data-toggle="modal" th:disabled="${order.status == 'EXPIRED'}"
+							th:attr="data-target='#exampleModalCenter' + ${order.id}">Thêm
+							dịch vụ</button> <!-- Modal -->
+
+						<form method="post" action="/client/logs/add-service-to-order">
+							<div class="modal fade"
+								th:id="'exampleModalCenter' + ${order.id}" tabindex="-1"
+								role="dialog" aria-labelledby="exampleModalCenterTitle"
+								aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+
+										<div class="modal-body">
+											<input th:value="${order.id}" name="orderId" hidden>
+
+											<div
+												class="border d-flex justify-content-between align-items-center mb-2"
+												th:each="service : ${services}">
+												<div class="d-flex">
+													<div class="pl-2">
+														<p class="m-0">
+															<a class="font-weight-bolder">Tên dịch vụ:</a> <span
+																th:text="${service.name}">1000</span>
+														</p>
+														<p class="m-0">
+															<a class="font-weight-bolder">Giá dịch vụ:</a> <span
+																th:text="${#numbers.formatDecimal(service.price, 1, 'POINT', 0, 'COMMA')} + 'VND'">1000</span>
+														</p>
+													</div>
+												</div>
+												<div class="pr-2">
+													<div class="input-group">
+														<div class="input-group-prepend">
+															<div class="input-group-text">
+																<input type="checkbox" class="service-checkbox"
+																	name="selectedServices" th:value="${service.id}"
+																	th:attr="id='service_' + ${service.id}"
+																	th:data-price="${service.price}">
+															</div>
+														</div>
+														<input th:name="'quantities[' + ${service.id} + ']'"
+															required="required" type="number" min="0"
+															style="width: 60px" class="form-control quantity-input"
+															disabled>
+													</div>
+												</div>
+											</div>
+
+											<!--  <div class="d-flex justify-content-end">
+                        <span>Tổng tiền: <span th:id="'total-price' + ${order.id }">0</span> VND</span>
+                    </div> -->
+
+											<script>
+												document
+														.querySelectorAll(
+																'.service-checkbox')
+														.forEach(
+																function(
+																		checkbox) {
+																	checkbox
+																			.addEventListener(
+																					'change',
+																					function() {
+																						var quantityInput = this
+																								.closest(
+																										'.input-group')
+																								.querySelector(
+																										'.quantity-input');
+																						if (this.checked) {
+																							quantityInput.disabled = false;
+																						} else {
+																							quantityInput.disabled = true;
+																							quantityInput.value = '';
+																						}
+																						updateTotalPrice();
+																					});
+																});
+											</script>
+
+										</div>
+										<div class="modal-footer border-top-0">
+											<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">Hủy</button>
+											<button type="submit" class="btn btn-success">Thanh
+												toán</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+
+
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<th:block th:insert="~{/client/fragments :: toasts}"></th:block>
+	<th:block th:insert="~{/client/fragments :: footer-elm}"></th:block>
+	<!-- Js Plugins -->
+	<th:block th:insert="~{/client/fragments :: script-tags}"></th:block>
+
+</body>
+
+</html>

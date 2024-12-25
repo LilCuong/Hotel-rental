@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <th:block th:insert="~{/client/fragments.html :: head-elms}"></th:block>
+    <title>Sona | Template</title>
+</head>
+
+<body>
+    <th:block th:insert="~{/client/fragments.html :: preloader-elm}"></th:block>
+    <th:block th:insert="~{/client/fragments.html :: header-elm}"></th:block>
+
+    <!-- Breadcrumb Section Begin -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-text">
+                        <h2>Các Phòng Của Chúng Tôi</h2>
+                        <div class="bt-option">
+                            <a href="/">Trang chủ</a>
+                            <span>Phòng</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb Section End -->
+    
+    
+    <div class="container mb-3">
+		<div class="row">
+			<div class="rounded border shadow-sm p-2 mt-3 bg-white col-12 ">
+				<form onsubmit="return validateDates()" method="post"
+					action="/client/cart/get-cart">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="inputEmail4">Chọn ngày đến</label> <input type="date"
+								name="startDate" class="form-control" id="checkInDate"
+								required="required"
+								th:value="${#dates.format(cart.startDate, 'yyyy-MM-dd')}">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="inputPassword4">Chọn ngày đi</label> <input
+								name="endDate" type="date" class="form-control"
+								id="checkOutDate" required="required"
+								th:value="${#dates.format(cart.endDate, 'yyyy-MM-dd')}">
+						</div>
+					</div>
+
+					<button type="submit" class="btn btn-warning w-100"
+						style="background-color: #dfa974; border: none; color: white">Cập nhật ngày</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function validateDates() {
+			const checkInDate = new Date(
+					document.getElementById('checkInDate').value);
+			const checkOutDate = new Date(document
+					.getElementById('checkOutDate').value);
+			const today = new Date();
+
+			today.setHours(0, 0, 0, 0);
+			checkInDate.setHours(0, 0, 0, 0);
+			checkOutDate.setHours(0, 0, 0, 0);
+
+			if (checkInDate < today) {
+				alert("Ngày đến không thể là ngày hôm qua hoặc trước đó!");
+				return false;
+			}
+
+			if (checkOutDate <= checkInDate) {
+				alert("Ngày trả phòng phải sau ngày đến!");
+				return false;
+			}
+
+			return true;
+		}
+	</script>
+    
+
+    <!-- Rooms Section Begin -->
+    <section class="rooms-section spad">
+        <div class="container">
+            <div class="row align-items-strecth">
+                <div th:each="room : ${rooms}" class="col-lg-4 col-md-6">
+                    <div class="room-item">
+                        <th:block th:switch="${room.type}">
+                            <img th:case="SINGLE" src="/client/img/room/room-1.jpg" alt="">
+                            <img th:case="COUPLE" src="/client/img/room/room-2.jpg" alt="">
+                            <img th:case="FAMILY" src="/client/img/room/room-3.jpg" alt="">
+                            <img th:case="LUXURY" src="/client/img/room/room-4.jpg" alt="">
+                        </th:block>
+                        <div class="ri-text">
+                            <th:block th:switch="${room.type}">
+                                <h4 th:case="SINGLE">Phòng Đơn</h4>
+                                <h4 th:case="COUPLE">Phòng Đôi</h4>
+                                <h4 th:case="FAMILY">Phòng Gia Đình</h4>
+                                <h4 th:case="LUXURY">Phòng King Cao Cấp</h4>
+                            </th:block>
+                            <h3 th:text="${room.price + '$/Phòng'}"></h3>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="r-o">Diện tích:</td>
+                                        <th:block th:switch="${room.type}">
+                                            <td th:case="SINGLE">10 ft</td>
+                                            <td th:case="COUPLE">18 ft</td>
+                                            <td th:case="FAMILY">30 ft</td>
+                                            <td th:case="LUXURY">20 ft</td>
+                                        </th:block>
+                                    </tr>
+                                    <tr>
+                                        <td class="r-o">Sức chứa:</td>
+                                        <th:block th:switch="${room.type}">
+                                            <td th:case="SINGLE">Tối đa 2 người</td>
+                                            <td th:case="COUPLE">Tối đa 4 người</td>
+                                            <td th:case="FAMILY">Tối đa 5 người</td>
+                                            <td th:case="LUXURY">Tối đa 4 người</td>
+                                        </th:block>
+                                    </tr>
+                                    <tr>
+                                        <td class="r-o">Giường:</td>
+                                        <th:block th:switch="${room.type}">
+                                            <td th:case="SINGLE">Giường King</td>
+                                            <td th:case="COUPLE">2 Giường King</td>
+                                            <td th:case="FAMILY">2 Giường King</td>
+                                            <td th:case="LUXURY">2 Giường Cao Cấp Sang Trọng</td>
+                                        </th:block>
+                                    </tr>
+                                    <tr>
+                                        <td class="r-o">Dịch vụ:</td>
+                                        <td>Đa dạng, gọi phục vụ để order</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button data-button-type="request" data-button-name="pick-room" th:if="${room.status == 'EMPTY'}"
+                                th:data-request-action="@{/client/cart/add-room-to-cart/{id} (id = ${room.id})}"
+                                class="btn btn-primary">Chọn phòng</button>
+                                 <button  data-button-name="pick-room" th:if="${room.status != 'EMPTY'}" disabled="disabled"
+                                class="btn btn-primary">Hết phòng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+    
+    
+     <th:block th:insert="~{/client/fragments :: toasts}"></th:block>
+    <!-- Rooms Section End -->
+    <th:block th:insert="~{/client/fragments :: footer-elm}"></th:block>
+    <!-- Js Plugins -->
+    <th:block th:insert="~{/client/fragments :: script-tags}"></th:block>
+    <script>
+        const btnPickRooms = document.querySelectorAll("button[data-button-name=pick-room]")
+        btnPickRooms.forEach(elm => {
+            elm.addEventListener("click", (e) => {
+                if (confirm("Bạn có chắc muốn đặt phòng này?")) {
+                    location.href = elm.dataset.requestAction;
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

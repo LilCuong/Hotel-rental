@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <th:block th:insert="~{/dashboard/fragments :: head-elms}"></th:block>
+    <!-- Title Page-->
+    <title>Dashboard 2</title>
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- MENU SIDEBAR-->
+        <th:block th:insert="~{/dashboard/fragments :: sidebar-elm}"></th:block>
+        <!-- END MENU SIDEBAR-->
+        <!-- PAGE CONTAINER-->
+        <div class="page-container2">
+            <!-- HEADER DESKTOP-->
+            <th:block th:insert="~{/dashboard/fragments :: header-desktop-elm}"></th:block>
+            <!-- END HEADER DESKTOP-->
+            <!-- BREADCRUMB-->
+            <section class="au-breadcrumb m-t-75">
+                <div class="section__content">
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-between">
+                            <h3>Quản lý đặt phòng</h3>
+                            <!-- <a class="btn btn-primary" href="">Thêm mới</a> -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- START CONTAINER -->
+            <div class="col-md-12 m-t-25">
+                <!-- DATA TABLE -->
+                <h3 class="title-5">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="title-5 m-b-35">Danh sách đặt phòng đang có người ở</h3>
+                    </div>
+                </h3>
+                <div class="table-responsive table-responsive-data2">
+                 <div th:if="${response_msg != null}" class="alert alert-secondary" th:text="${response_msg}"></div>
+                    <table class="table table-data2">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Khách hàng</th>
+                                <th>Phòng</th>
+                                <th>Dịch vụ</th>
+                                <th>Tổng tiền</th>
+                                 <th>Ngày đặt</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="order : ${orders}" class="tr-shadow">
+                                <td th:text="${order.id}">1</td>
+                                <td>
+                                    <a th:text="${order.account.name}"
+                                        th:href="@{/dashboard/accounts/edit/{id}/ (id = ${order.id})}" class=""></a>
+                                </td>
+                               <!--  <td>
+                                    <a th:text="*{object.room.name}"
+                                        th:href="@{/dashboard/rooms/edit/{id}/ (id = *{object.id})}" class=""></a>
+                                </td> -->
+                                <!-- <td class="" th:text="*{object.totalPrice}">Camera C430W 4k</td> -->
+                                <td>
+                                <p th:each="room : ${roomOrders}">
+                                <span th:text="${room.name}"></span>
+                                </p>
+                                </td>
+                                <td>
+                                <div th:each="service : ${order.serviceOrders}">
+                        					<span th:text="${service.name} + ' x ' + ${service.quantity}"></span>
+                        					<button type="button" class="btn btn-outline-primary px-1 py-0 mb-1"
+							data-toggle="modal" 
+							th:attr="data-target='#exampleModalCenter' + ${service.id}">Ghi chú</button> <!-- Modal -->
+									
+									<form method="post">
+							<div class="modal fade"
+								th:id="'exampleModalCenter' + ${service.id}" tabindex="-1"
+								role="dialog" aria-labelledby="exampleModalCenterTitle"
+								aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+
+										<div class="modal-body">
+											
+
+											  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Ghi chú dịch vụ <span class="font-weight-bold" th:text="${service.name}"></span> </label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="note" th:text="${service.note}"></textarea>
+    
+  </div>
+											
+
+										</div>
+										<div class="modal-footer border-top-0">
+											<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">Hủy</button>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+                        				</div>
+                                </td>
+                                <td th:text="${#numbers.formatDecimal(order.total ,1 , 'COMMA', 0, 'POINT')} + 'VND'"></td>
+                                <td>
+                                	<p th:text=" 'Ngày nhận:' + ${#dates.format(order.startDate, 'dd/MM/yyyy')}">
+                                	<p th:text=" 'Ngày trả:' + ${#dates.format(order.endDate, 'dd/MM/yyyy')}">
+                                </td>
+                                <td>
+                                    <span class="status--process" th:if="${order.status == 'LIVING'}">Đã nhận phòng</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-nowrap">
+                                        <!-- <a th:href="@{../{id}/services/ (id = ${order.id})}"
+                                            class="btn btn-sm btn-primary m-r-5">Service</a> -->
+                                            <button type="button" class="btn btn-primary p-1  m-r-5"
+							data-toggle="modal" th:disabled="${order.status == 'EXPIRED'}"
+							th:attr="data-target='#exampleModalCenter' + ${order.id}">
+							dịch vụ</button> <!-- Modal -->
+							
+							<form method="post" action="/dashboard/orders/add-service/">
+    <div class="modal fade" th:id="'exampleModalCenter' + ${order.id}"
+        tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <input th:value="${order.id}" name="orderId" hidden>
+
+                    <div class="border d-flex justify-content-between align-items-center mb-2" th:each="service : ${services}">
+                        <div class="d-flex">
+                            <div class="pl-2">
+                                <p class="m-0">
+                                    <a class="font-weight-bolder">Tên dịch vụ:</a> <span th:text="${service.name}">1000</span>
+                                </p>
+                                <p class="m-0">
+                                    <a class="font-weight-bolder">Giá dịch vụ:</a> <span th:text="${#numbers.formatDecimal(service.price, 1, 'POINT', 0, 'COMMA')} + 'VND'">1000</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="pr-2">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <input type="checkbox" class="service-checkbox" name="selectedServices" th:value="${service.id}" th:attr="id='service_' + ${service.id}" th:data-price="${service.price}">
+                                    </div>
+                                </div>
+                                <input  th:name="'quantities[' + ${service.id} + ']'" required="required" type="number" min="0" style="width: 60px" class="form-control quantity-input" disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                   <!--  <div class="d-flex justify-content-end">
+                        <span>Tổng tiền: <span th:id="'total-price' + ${order.id }">0</span> VND</span>
+                    </div> -->
+
+                    <script>
+                        document.querySelectorAll('.service-checkbox').forEach(function(checkbox) {
+                            checkbox.addEventListener('change', function() {
+                                var quantityInput = this.closest('.input-group').querySelector('.quantity-input');
+                                if (this.checked) {
+                                    quantityInput.disabled = false;
+                                } else {
+                                    quantityInput.disabled = true;
+                                    quantityInput.value = '';
+                                }
+                                updateTotalPrice();
+                            });
+                        });
+
+                        
+                    </script>
+
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+                                        <a th:href="@{../edit/{id}/ (id = ${order.id})}"
+                                            class="btn btn-sm btn-secondary m-r-5">Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- END DATA TABLE -->
+            </div>
+            <!-- END CONTAINER -->
+        </div>
+
+    </div>
+    <th:block th:insert="~{/dashboard/fragments :: script-tags}"></th:block>
+</body>
+
+</html>
+<!-- end document-->

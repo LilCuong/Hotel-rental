@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <th:block th:insert="~{/dashboard/fragments :: head-elms}"></th:block>
+    <!-- Title Page-->
+    <title>Dashboard 2</title>
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- MENU SIDEBAR-->
+        <th:block th:insert="~{/dashboard/fragments :: sidebar-elm}"></th:block>
+        <!-- END MENU SIDEBAR-->
+        <!-- PAGE CONTAINER-->
+        <div class="page-container2">
+            <!-- HEADER DESKTOP-->
+            <th:block th:insert="~{/dashboard/fragments :: header-desktop-elm}"></th:block>
+            <!-- END HEADER DESKTOP-->
+            <!-- BREADCRUMB-->
+            <section class="au-breadcrumb m-t-75">
+                <div class="section__content">
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-between">
+                            <h3>Quản lý đặt phòng</h3>
+                            <!-- <a class="btn btn-primary" href="">Thêm mới</a> -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- START CONTAINER -->
+            <div class="col-md-12 m-t-25">
+                <!-- DATA TABLE -->
+                <h3 class="title-5">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="title-5 m-b-35">Danh sách đặt phòng đang chờ</h3>
+                    </div>
+                </h3>
+                <div class="table-responsive table-responsive-data2">
+                    <table class="table table-data2">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Khách hàng</th>
+                                <th>Phòng</th>
+                                <th>Dịch vụ</th>
+                                <th>Tổng tiền</th>
+                                <th>Ngày đặt</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        		<tr th:each="order : ${orders}">
+                        			<td th:text="${order.id}"></td>
+                        			<td th:text="${order.account.name}"></td>
+                        			<td>
+                        				<p th:each="room : ${order.roomOrders}">
+                        					<span th:text="${room.name}"></span>
+                        				</p>
+                        			</td>
+                        			<td>
+                        			<div th:each="service : ${order.serviceOrders}">
+                        					<span th:text="${service.name} + ' x ' + ${service.quantity}"></span>
+                        					<button type="button" class="btn btn-outline-primary px-1 py-0 mb-1"
+							data-toggle="modal" 
+							th:attr="data-target='#exampleModalCenter' + ${service.id}">Ghi chú</button> <!-- Modal -->
+									
+									<form method="post">
+							<div class="modal fade"
+								th:id="'exampleModalCenter' + ${service.id}" tabindex="-1"
+								role="dialog" aria-labelledby="exampleModalCenterTitle"
+								aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+
+										<div class="modal-body">
+											
+
+											  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Ghi chú dịch vụ <span class="font-weight-bold" th:text="${service.name}"></span> </label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="note" th:text="${service.note}"></textarea>
+    
+  </div>
+											
+
+										</div>
+										<div class="modal-footer border-top-0">
+											<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">Hủy</button>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+                        				</div>
+                        			</td>
+                        			<td th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 0, 'POINT')} + 'VND'"></td>
+                        			<td>
+                        				<p th:text="'Ngày nhận:' + ${#dates.format(order.startDate, 'dd/MM/yyyy')}">
+                        				<p th:text="'Ngày trả:' + ${#dates.format(order.endDate, 'dd/MM/yyyy')}">
+                        			</td>
+                        			<td>
+                        			<span class="status--process">Đang chờ</span>
+                        			</td>
+                        			<td>
+                        			 <div class="d-flex flex-nowrap">
+                                        <a th:href="@{../edit/{id}/ (id = *{order.id})}"
+                                            class="btn btn-sm btn-secondary m-r-5">Edit</a>
+                                    </div>
+                        			</td>
+                        		</tr>
+                           <!--  <tr th:each="object : ${objects}" class="tr-shadow">
+                                <td th:text="*{object.id}">1</td>
+                                <td>
+                                    <a th:text="*{object.account.name}"
+                                        th:href="@{/dashboard/accounts/edit/{id}/ (id = *{object.id})}" class=""></a>
+                                </td>
+                                <td>
+                                    <a th:text="*{object.roomOrder.name}"
+                                        th:href="@{/dashboard/rooms/edit/{id}/ (id = *{object.id})}" class=""></a>
+                                </td>
+                                <td class="" th:text="*{object.totalPrice}">Camera C430W 4k</td>
+                                <td>
+                                    <span class="status--process" th:text="*{object.status}">Processed</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-nowrap">
+                                        <a th:href="@{../edit/{id}/ (id = *{object.id})}"
+                                            class="btn btn-sm btn-secondary m-r-5">Edit</a>
+                                    </div>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- END DATA TABLE -->
+            </div>
+            <!-- END CONTAINER -->
+        </div>
+
+    </div>
+    <th:block th:insert="~{/dashboard/fragments :: script-tags}"></th:block>
+</body>
+
+</html>
+<!-- end document-->

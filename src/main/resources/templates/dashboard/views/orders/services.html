@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <th:block th:insert="~{/dashboard/fragments :: head-elms}"></th:block>
+    <!-- Title Page-->
+    <title>Dashboard 2</title>
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- MENU SIDEBAR-->
+        <th:block th:insert="~{/dashboard/fragments :: sidebar-elm}"></th:block>
+        <!-- END MENU SIDEBAR-->
+        <!-- PAGE CONTAINER-->
+        <div class="page-container2">
+            <!-- HEADER DESKTOP-->
+            <th:block th:insert="~{/dashboard/fragments :: header-desktop-elm}"></th:block>
+            <!-- END HEADER DESKTOP-->
+            <!-- BREADCRUMB-->
+            <section class="au-breadcrumb m-t-75">
+                <div class="section__content">
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-between">
+                            <h3>Quản lý đặt phòng</h3>
+                            <!-- <a class="btn btn-primary" href="">Thêm mới</a> -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- START CONTAINER -->
+            <div class="col-md-12 m-t-25">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header"><b>Thêm dịch vụ</b></div>
+                            <div class="card-body">
+                                <form action="" method="post">
+                                    <div class="form-group">
+                                        <label for="service_id">Chọn dịch vụ</label>
+                                        <select name="service_id" id="service_id" class="custom-select" required>
+                                            <option th:each="service : ${services}" th:value="*{service.id}"
+                                                th:text="*{service.name + ' - ' + service.price}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Thêm</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- DATA TABLE -->
+                        <h3 class="title-5">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="title-5 m-b-35">Danh sách dịch vụ</h3>
+                            </div>
+                        </h3>
+                        <div class="table-responsive table-responsive-data2">
+                            <table class="table table-data2">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên dịch vụ</th>
+                                        <th>Giá dịch vụ</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="row : ${object.services}" class="tr-shadow">
+                                        <td th:text="*{row.id}">1</td>
+                                        <td class="" th:text="*{row.name}">Camera C430W 4k</td>
+                                        <td class="" th:text="*{row.price}">Camera C430W 4k</td>
+                                        <td>
+                                            <div class="d-flex flex-nowrap">
+                                                <a th:href="@{./delete?service_id={id} (id = *{row.id})}"
+                                                    class="btn btn-sm btn-danger">Remove</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- END DATA TABLE -->
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTAINER -->
+        </div>
+
+    </div>
+    <th:block th:insert="~{/dashboard/fragments :: script-tags}"></th:block>
+</body>
+
+</html>
+<!-- end document-->

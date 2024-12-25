@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <th:block th:insert="~{/dashboard/fragments :: head-elms}"></th:block>
+    <!-- Title Page-->
+    <title>Dashboard 2</title>
+</head>
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- MENU SIDEBAR-->
+        <th:block th:insert="~{/dashboard/fragments :: sidebar-elm}"></th:block>
+        <!-- END MENU SIDEBAR-->
+        <!-- PAGE CONTAINER-->
+        <div class="page-container2">
+            <!-- HEADER DESKTOP-->
+            <th:block th:insert="~{/dashboard/fragments :: header-desktop-elm}"></th:block>
+            <!-- END HEADER DESKTOP-->
+            <!-- BREADCRUMB-->
+            <section class="au-breadcrumb m-t-75">
+                <div class="section__content">
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-between">
+                            <h3>Quản lý đặt phòng</h3>
+                            <!-- <a class="btn btn-primary" href="">Thêm mới</a> -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- START CONTAINER -->
+            <div class="col-lg-12 m-t-25">
+                <div class="card">
+                    <div class="card-header">Chỉnh sửa đối tượng</div>
+                    <div class="card-body">
+                        <div th:if="${response_msg != null}" class="alert alert-secondary" th:text="${response_msg}">
+                        </div>
+                        <form action="" method="post">
+                            <div class="form-group">
+                                <label for="id">ID</label>
+                                <input type="number" class="form-control" id="id" name="id" th:value="${object.id}"
+                                    required readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerName">Tên khách hàng</label>
+                                <input type="text" class="form-control" id="customerName"
+                                    th:value="${object.account.name}" readonly>
+                            </div>
+                           <!--  <div class="form-group">
+                                <label for="roomName">Tên phòng</label>
+                                <input type="text" class="form-control" id="roomName" th:value="${object.room.name}"
+                                    readonly>
+                            </div> -->
+                           <!--  <div class="form-group">
+                                <label for="price">Tổng tiền</label>
+                                <input type="number" class="form-control" id="totalPrice"
+                                    th:value="${object.totalPrice}" readonly>
+                            </div> -->
+                            
+                            <div class="row">
+                            <div class=" col-6">
+                            <div class="card p-2">
+                            	<div class="card-header">Phòng</div>
+                            	<div class="card-body">
+                            		<p th:each="room : ${roomOrders}">
+                            		<span th:text="${room.name}"></span>
+                            		</p>
+                            	</div>
+                            </div>
+                            </div>
+                            
+                            <div class=" col-6">
+                            <div class="card p-2">
+                            	<div class="card-header">Dịch vụ</div>
+                            	<div class="card-body">
+                            		<p th:each="service : ${serviceOrders}">
+                            		<span th:text="${service.name} + ' x ' + ${service.quantity}"></span>
+                            		<small th:text="'Ghi chú: ' + ${service.note}"></small>
+                            		</p>
+                            	</div>
+                            </div>
+                            </div>
+                            </div>
+                            
+                            
+                            <div class="form-group">
+                                <label for="orderStatus">Trạng thái đơn hàng</label>
+                                <select name="orderStatus" id="orderStatus" class="custom-select"
+                                    th:value="${object.status}" required>
+                                    <option value="WAITING" th:selected="${object.status == 'WAITING'}">
+                                        Đang chờ
+                                    </option>
+                                    <option value="LIVING" th:selected="${object.status == 'LIVING'}">
+                                        Đã sắp xếp phòng
+                                    </option>
+                                    <option value="EXPIRED" th:selected="${object.status == 'EXPIRED'}">
+                                        Trả phòng / Từ chối nhận phòng
+                                    </option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTAINER -->
+        </div>
+    </div>
+    <th:block th:insert="~{/dashboard/fragments :: script-tags}"></th:block>
+</body>
+
+</html>
+<!-- end document-->

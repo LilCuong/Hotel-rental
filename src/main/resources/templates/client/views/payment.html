@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <th:block th:insert="~{/client/fragments.html :: head-elms}"></th:block>
+    <title>Sona | Template</title>
+</head>
+
+<body>
+    <th:block th:insert="~{/client/fragments.html :: preloader-elm}"></th:block>
+    <th:block th:insert="~{/client/fragments.html :: header-elm}"></th:block>
+
+    <!-- Phần BreadCrumb -->
+    <div class="breadcrumb-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-text">
+                        <h2>Thanh toán</h2>
+                        <div class="bt-option">
+                            <a href="./home.html">Chọn phòng</a>
+                            <span>Thanh toán</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container pb-4">
+        <div class="col-md-12 mb-3">
+            <img class="w-100" src="https://sinbadgroup.org/upload/baiviet/quet-ma-momo-864x474.png" alt="">
+        </div>
+
+        <div class="col-md-12">
+            <a th:href="@{/client/payment/payment}" class="w-100 btn btn-success" type="button">Đã thanh toán</a>
+        </div>
+    </div>
+<th:block th:insert="~{/client/fragments :: toasts}"></th:block>
+    <th:block th:insert="~{/client/fragments :: footer-elm}"></th:block>
+    <!-- Js Plugins -->
+    <th:block th:insert="~{/client/fragments :: script-tags}"></th:block>
+
+</body>
+
+</html>

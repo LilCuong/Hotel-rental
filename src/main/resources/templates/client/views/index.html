@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<th:block th:insert="~{/client/fragments.html :: head-elms}"></th:block>
+<title>Sona | Template</title>
+</head>
+
+<body>
+	<th:block th:insert="~{/client/fragments.html :: preloader-elm}"></th:block>
+	<th:block th:insert="~{/client/fragments.html :: header-elm}"></th:block>
+	<!-- Hero Section Begin -->
+	<section class="hero-section ">
+
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="hero-text">
+						<h1>Melia Vinperl Đà Nẵng</h1>
+						<p>Tại đây có đa dạng các phòng phù hợp với mọi nhu cầu khách
+							hàng, các phòng của chúng tôi bảo đảm chất lượng và sang trọng,
+							sạch sẽ</p>
+						<a href="#" class="primary-btn">KHÁM PHÁ NGAY BÂY GIỜ</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="hero-slider owl-carousel">
+			<div class="hs-item set-bg" data-setbg="/client/img/hero/hero-1.jpg"></div>
+			<div class="hs-item set-bg" data-setbg="/client/img/hero/hero-2.jpg"></div>
+			<div class="hs-item set-bg" data-setbg="/client/img/hero/hero-3.jpg"></div>
+		</div>
+
+
+	</section>
+	<!-- Hero Section End -->
+	<div class="container">
+		<div class="row">
+			<div class="rounded border shadow-sm p-2 mt-3 bg-white col-12 ">
+				<form onsubmit="return validateDates()" method="post"
+					action="/client/cart/get-cart">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="inputEmail4">Chọn ngày đến</label> <input type="date"
+								name="startDate" class="form-control" id="checkInDate"
+								required="required"
+								th:value="${#dates.format(cart.startDate, 'yyyy-MM-dd')}">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="inputPassword4">Chọn ngày đi</label> <input
+								name="endDate" type="date" class="form-control"
+								id="checkOutDate" required="required"
+								th:value="${#dates.format(cart.endDate, 'yyyy-MM-dd')}">
+						</div>
+					</div>
+
+					<button type="submit" class="btn btn-warning w-100"
+						style="background-color: #dfa974; border: none; color: white">Đặt
+						phòng ngay</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function validateDates() {
+			const checkInDate = new Date(
+					document.getElementById('checkInDate').value);
+			const checkOutDate = new Date(document
+					.getElementById('checkOutDate').value);
+			const today = new Date();
+
+			today.setHours(0, 0, 0, 0);
+			checkInDate.setHours(0, 0, 0, 0);
+			checkOutDate.setHours(0, 0, 0, 0);
+
+			if (checkInDate < today) {
+				alert("Ngày đến không thể là ngày hôm qua hoặc trước đó!");
+				return false;
+			}
+
+			if (checkOutDate <= checkInDate) {
+				alert("Ngày trả phòng phải sau ngày đến!");
+				return false;
+			}
+
+			return true;
+		}
+	</script>
+
+
+	<!-- About Us Section Begin -->
+	<section class="aboutus-section spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="about-text">
+						<div class="section-title">
+							<span>VỀ CHÚNG TÔI</span>
+							<h2>KHÁCH SẠN MELIA VINPEARL ĐÀ NẴNG</h2>
+						</div>
+						<p class="f-para">Melia Vinpearl Đà Nẵng là một trong những
+							điểm đến lý tưởng cho du khách tìm kiếm trải nghiệm nghỉ dưỡng
+							sang trọng và tiện nghi tại thành phố biển Đà Nẵng. Khách sạn
+							mang đến không gian nghỉ dưỡng sang trọng với các phòng nghỉ rộng
+							rãi, được thiết kế hiện đại và đầy đủ tiện nghi. Nằm tại vị trí
+							đắc địa bên bờ biển, Melia Vinpearl cung cấp cho du khách không
+							chỉ làn nước biển trong xanh mà còn là dịch vụ chăm sóc khách
+							hàng chuyên nghiệp và chu đáo. Với các tiện ích cao cấp như hồ
+							bơi, nhà hàng sang trọng, spa và các hoạt động giải trí, Melia
+							Vinpearl Đà Nẵng hứa hẹn mang đến trải nghiệm nghỉ dưỡng đáng nhớ
+							cho du khách.</p>
+						<a href="#" class="primary-btn about-btn">XEM THÊM</a>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="about-pic">
+						<div class="row">
+							<div class="col-sm-6">
+								<img src="/client/img/about/about-1.jpg" alt="" />
+							</div>
+							<div class="col-sm-6">
+								<img src="/client/img/about/about-2.jpg" alt="" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- About Us Section End -->
+
+	<!-- Services Section End -->
+	<section class="services-section spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<span>Chúng ta nên làm gì?</span>
+						<h2>Hãy khám phá dịch vụ của chúng tôi</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 col-sm-6">
+					<div class="service-item">
+						<i class="flaticon-036-parking"></i>
+						<h4>Kế hoạch chuyến đi</h4>
+						<p>Kế hoạch chuyến đi sẽ bao gồm thăm thú các điểm du lịch nổi
+							tiếng ở Đà Nẵng như Bà Nà Hills, Cầu Rồng, Ngũ Hành Sơn và thưởng
+							thức các món ăn đặc sản của vùng miền. Ngoài ra, cũng có thể dành
+							thời gian thư giãn tại Melia Vinpearl Đà Nẵng để tận hưởng không
+							gian nghỉ dưỡng và dịch vụ tiện ích cao cấp.</p>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6">
+					<div class="service-item">
+						<i class="flaticon-033-dinner"></i>
+						<h4>Dịch vụ ăn uống</h4>
+						<p>Tại Melia Vinpearl Đà Nẵng, du khách sẽ được trải nghiệm ẩm
+							thực đa dạng và phong phú với các nhà hàng sang trọng, phục vụ từ
+							các món ăn quốc tế đến hương vị đặc trưng của vùng miền. Đội ngũ
+							đầu bếp tài năng sẽ đảm bảo mỗi bữa ăn đều là một trải nghiệm
+							tuyệt vời cho du khách.</p>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6">
+					<div class="service-item">
+						<i class="flaticon-026-bed"></i>
+						<h4>Dịch vụ trông trẻ</h4>
+						<p>Dịch vụ trông trẻ tại Melia Vinpearl Đà Nẵng được tổ chức
+							chuyên nghiệp và an toàn, giúp du khách yên tâm thưởng ngoạn
+							những trải nghiệm thú vị mà không cần lo lắng về việc chăm sóc
+							trẻ nhỏ của mình. Đội ngũ nhân viên giàu kinh nghiệm sẽ chăm sóc
+							và giáo dục trẻ em một cách tận tình và chu đáo, đảm bảo họ có
+							thời gian vui chơi an toàn và ý nghĩa trong khi cha mẹ có thể thư
+							giãn và tận hưởng kỳ nghỉ của mình.</p>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6">
+					<div class="service-item">
+						<i class="flaticon-024-towel"></i>
+						<h4>Dịch vụ giặt sấy</h4>
+						<p>ChatGPT Dịch vụ giặt sấy tại Melia Vinpearl Đà Nẵng mang
+							lại sự tiện lợi và thoải mái cho du khách, với tiêu chuẩn chất
+							lượng cao và dịch vụ nhanh chóng. Khách hàng có thể yên tâm gửi
+							quần áo và vật dụng cá nhân của mình để được làm sạch và sấy khô
+							một cách chuyên nghiệp, giúp tiết kiệm thời gian và tận hưởng kỳ
+							nghỉ một cách thoải mái nhất.</p>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6">
+					<div class="service-item">
+						<i class="flaticon-044-clock-1"></i>
+						<h4>Thuê tài xế riêng</h4>
+						<p>Dịch vụ thuê tài xế tại Melia Vinpearl Đà Nẵng mang đến sự
+							thuận tiện và an toàn cho du khách trong việc di chuyển khám phá
+							địa điểm du lịch. Với đội ngũ tài xế chuyên nghiệp và am hiểu
+							vùng địa phương, du khách có thể khám phá mọi điểm đến một cách
+							dễ dàng và thoải mái, đồng thời tận hưởng những trải nghiệm du
+							lịch độc đáo mà không phải lo lắng về việc lái xe.</p>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-6">
+					<div class="service-item">
+						<i class="flaticon-012-cocktail"></i>
+						<h4>Bar & Drink</h4>
+						<p>Bar & Drink tại Melia Vinpearl Đà Nẵng là điểm đến lý tưởng
+							cho những ai muốn thư giãn và tận hưởng không gian sang trọng và
+							ấm cúng. Với đa dạng các loại cocktail và đồ uống tinh tế, cùng
+							không gian lịch lãm, Bar & Drink hứa hẹn mang đến trải nghiệm thú
+							vị và độc đáo cho du khách.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Services Section End -->
+
+	<!-- Home Room Section Begin -->
+	<section class="hp-room-section">
+		<div class="container-fluid">
+			<div class="hp-room-items">
+				<div class="row">
+					<div class="col-lg-3 col-md-6">
+						<div class="hp-room-item set-bg"
+							data-setbg="/client/img/room/room-b1.jpg">
+							<div class="hr-text">
+								<h3>Phòng Đôi</h3>
+								<h2>
+									199$<span>/Mỗi đêm</span>
+								</h2>
+								<table>
+									<tbody>
+										<tr>
+											<td class="r-o">Diện tích:</td>
+											<td>30 ft</td>
+										</tr>
+										<tr>
+											<td class="r-o">Sức chứa:</td>
+											<td>Tối đa 5 người</td>
+										</tr>
+										<tr>
+											<td class="r-o">Giường:</td>
+											<td>Giường King</td>
+										</tr>
+										<tr>
+											<td class="r-o">Dịch vụ:</td>
+											<td>Wifi, Truyền hình, Phòng tắm,...</td>
+										</tr>
+									</tbody>
+								</table>
+								<a href="#" class="primary-btn">Chi tiết</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="hp-room-item set-bg"
+							data-setbg="/client/img/room/room-b2.jpg">
+							<div class="hr-text">
+								<h3>Phòng King Cao Cấp</h3>
+								<h2>
+									159$<span>/Mỗi đêm</span>
+								</h2>
+								<table>
+									<tbody>
+										<tr>
+											<td class="r-o">Diện tích:</td>
+											<td>30 ft</td>
+										</tr>
+										<tr>
+											<td class="r-o">Sức chứa:</td>
+											<td>Tối đa 5 người</td>
+										</tr>
+										<tr>
+											<td class="r-o">Giường:</td>
+											<td>Giường King</td>
+										</tr>
+										<tr>
+											<td class="r-o">Dịch vụ:</td>
+											<td>Wifi, Truyền hình, Phòng tắm,...</td>
+										</tr>
+									</tbody>
+								</table>
+								<a href="#" class="primary-btn">Chi tiết</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="hp-room-item set-bg"
+							data-setbg="/client/img/room/room-b3.jpg">
+							<div class="hr-text">
+								<h3>Phòng Deluxe</h3>
+								<h2>
+									198$<span>/Mỗi đêm</span>
+								</h2>
+								<table>
+									<tbody>
+										<tr>
+											<td class="r-o">Diện tích:</td>
+											<td>30 ft</td>
+										</tr>
+										<tr>
+											<td class="r-o">Sức chứa:</td>
+											<td>Tối đa 5 người</td>
+										</tr>
+										<tr>
+											<td class="r-o">Giường:</td>
+											<td>Giường King</td>
+										</tr>
+										<tr>
+											<td class="r-o">Dịch vụ:</td>
+											<td>Wifi, Truyền hình, Phòng tắm,...</td>
+										</tr>
+									</tbody>
+								</table>
+								<a href="#" class="primary-btn">Chi tiết</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="hp-room-item set-bg"
+							data-setbg="/client/img/room/room-b4.jpg">
+							<div class="hr-text">
+								<h3>Phòng Gia Đình</h3>
+								<h2>
+									299$<span>/Mỗi đêm</span>
+								</h2>
+								<table>
+									<tbody>
+										<tr>
+											<td class="r-o">Diện tích:</td>
+											<td>30 ft</td>
+										</tr>
+										<tr>
+											<td class="r-o">Sức chứa:</td>
+											<td>Tối đa 5 người</td>
+										</tr>
+										<tr>
+											<td class="r-o">Giường:</td>
+											<td>Giường King</td>
+										</tr>
+										<tr>
+											<td class="r-o">Dịch vụ:</td>
+											<td>Wifi, Truyền hình, Phòng tắm,...</td>
+										</tr>
+									</tbody>
+								</table>
+								<a href="#" class="primary-btn">Chi tiết</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Home Room Section End -->
+
+	<!-- Testimonial Section Begin -->
+	<section class="testimonial-section spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<span>Đánh giá từ khách hàng</span>
+						<h2>Khách Hàng Nói Gì?</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2">
+					<div class="testimonial-slider owl-carousel">
+						<div class="ts-item">
+							<p>Sau khi một dự án xây dựng kéo dài lâu hơn dự kiến, chồng
+								tôi, con gái và tôi cần một nơi ở trong vài đêm. Là cư dân của
+								Chicago, chúng tôi biết rất nhiều về thành phố, khu vực và các
+								lựa chọn nhà ở có sẵn và hoàn toàn yêu thích kỳ nghỉ của chúng
+								tôi tại Sona Hotel.</p>
+							<div class="ti-author">
+								<div class="rating">
+									<i class="icon_star"></i> <i class="icon_star"></i> <i
+										class="icon_star"></i> <i class="icon_star"></i> <i
+										class="icon_star-half_alt"></i>
+								</div>
+								<h5>- Alexander Vasquez</h5>
+							</div>
+							<img src="/client/img/testimonial-logo.png" alt="" />
+						</div>
+						<div class="ts-item">
+							<p>Sau khi một dự án xây dựng kéo dài lâu hơn dự kiến, chồng
+								tôi, con gái và tôi cần một nơi ở trong vài đêm. Là cư dân của
+								Chicago, chúng tôi biết rất nhiều về thành phố, khu vực và các
+								lựa chọn nhà ở có sẵn và hoàn toàn yêu thích kỳ nghỉ của chúng
+								tôi tại Sona Hotel.</p>
+							<div class="ti-author">
+								<div class="rating">
+									<i class="icon_star"></i> <i class="icon_star"></i> <i
+										class="icon_star"></i> <i class="icon_star"></i> <i
+										class="icon_star-half_alt"></i>
+								</div>
+								<h5>- Alexander Vasquez</h5>
+							</div>
+							<img src="/client/img/testimonial-logo.png" alt="" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Testimonial Section End -->
+
+	<!-- Blog Section Begin -->
+	<section class="blog-section spad">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<span>Tin Tức Khách Sạn</span>
+						<h2>Blog & Sự Kiện Của Chúng Tôi</h2>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="blog-item set-bg"
+						data-setbg="/client/img/blog/blog-1.jpg">
+						<div class="bi-text">
+							<span class="b-tag">Chuyến Đi Du Lịch</span>
+							<h4>
+								<a href="#">Tremblant Ở Canada</a>
+							</h4>
+							<div class="b-time">
+								<i class="icon_clock_alt"></i> 15 tháng 4, 2019
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="blog-item set-bg"
+						data-setbg="/client/img/blog/blog-2.jpg">
+						<div class="bi-text">
+							<span class="b-tag">Cắm Trại</span>
+							<h4>
+								<a href="#">Chọn Một Xe Caravan Tĩnh</a>
+							</h4>
+							<div class="b-time">
+								<i class="icon_clock_alt"></i> 15 tháng 4, 2019
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="blog-item set-bg"
+						data-setbg="/client/img/blog/blog-3.jpg">
+						<div class="bi-text">
+							<span class="b-tag">Sự Kiện</span>
+							<h4>
+								<a href="#">Hẻm Đồng Đồng</a>
+							</h4>
+							<div class="b-time">
+								<i class="icon_clock_alt"></i> 21 tháng 4, 2019
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-8">
+					<div class="blog-item small-size set-bg"
+						data-setbg="/client/img/blog/blog-wide.jpg">
+						<div class="bi-text">
+							<span class="b-tag">Sự Kiện</span>
+							<h4>
+								<a href="#">Chuyến Đi Đến Iqaluit Ở Nunavut Một Thành Phố
+									Bắc Cực Ở Canada</a>
+							</h4>
+							<div class="b-time">
+								<i class="icon_clock_alt"></i> 08 tháng 4, 2019
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="blog-item small-size set-bg"
+						data-setbg="/client/img/blog/blog-10.jpg">
+						<div class="bi-text">
+							<span class="b-tag">Du Lịch</span>
+							<h4>
+								<a href="#">Du Lịch Đến Barcelona</a>
+							</h4>
+							<div class="b-time">
+								<i class="icon_clock_alt"></i> 12 tháng 4, 2019
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Blog Section End -->
+
+	<th:block th:insert="~{/client/fragments :: footer-elm}"></th:block>
+
+	<!-- Js Plugins -->
+	<th:block th:insert="~{/client/fragments :: script-tags}"></th:block>
+</body>
+
+</html>

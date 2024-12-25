@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+<th:block th:insert="~{/client/fragments.html :: head-elms}"></th:block>
+<title>Sona | Template</title>
+</head>
+
+<body>
+	<th:block th:insert="~{/client/fragments.html :: preloader-elm}"></th:block>
+	<th:block th:insert="~{/client/fragments.html :: header-elm}"></th:block>
+
+	<!-- Phần BreadCrumb -->
+	<div class="breadcrumb-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="breadcrumb-text">
+						<h2>Đặt phòng</h2>
+						<div class="bt-option">
+							<a href="./home.html">Chọn phòng</a> <span>đặt phòng</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container pb-4">
+		<div class="col-md-12 mb-3 row">
+
+
+
+			<div class=" mt-3  col-lg-12  col-md-12 mb-3">
+				<div class="rp-2 rounded border shadow-sm  p-2">
+					<form onsubmit="return validateDates()" method="post"
+						action="/client/cart/update-date">
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="inputEmail4">Chọn ngày đến</label> <input
+									type="date" name="startDate" class="form-control"
+									id="checkInDate" required="required"
+									th:value="${#dates.format(cart.startDate, 'yyyy-MM-dd')}">
+							</div>
+							<div class="form-group col-md-6">
+								<label for="inputPassword4">Chọn ngày đi</label> <input
+									name="endDate" type="date" class="form-control"
+									id="checkOutDate" required="required"
+									th:value="${#dates.format(cart.endDate, 'yyyy-MM-dd')}">
+							</div>
+						</div>
+
+						<button type="submit" class="btn btn-warning w-100"
+							style="background-color: #dfa974; border: none; color: white">Cập
+							nhật ngày</button>
+					</form>
+				</div>
+			</div>
+
+
+			<script>
+				function validateDates() {
+					const checkInDate = new Date(document
+							.getElementById('checkInDate').value);
+					const checkOutDate = new Date(document
+							.getElementById('checkOutDate').value);
+					const today = new Date();
+
+					today.setHours(0, 0, 0, 0);
+					checkInDate.setHours(0, 0, 0, 0);
+					checkOutDate.setHours(0, 0, 0, 0);
+
+					if (checkInDate < today) {
+						alert("Ngày đến không thể là ngày hôm qua hoặc trước đó!");
+						return false;
+					}
+
+					if (checkOutDate <= checkInDate) {
+						alert("Ngày trả phòng phải sau ngày đến!");
+						return false;
+					}
+
+					return true;
+				}
+			</script>
+
+
+			<div class="col-lg-12  col-md-12 mb-3">
+				<div class="p-2 rounded border shadow-sm">
+					<h5 class="font-weight-bold">Phòng và dịch vụ đã chọn</h5>
+					<hr>
+					<table class="table table-borderless">
+						<thead>
+
+						</thead>
+						<tbody>
+							<tr th:each="cartItem : ${cartItems}"
+								
+								th:if="${cartItem.room != null}"   th:class="${cartItem.room.status.equals('NOT_EMPTY')} ? 'table-danger' : ''">
+								<td th:text="${cartItem.room.name}">Name</td>
+
+								<!-- <td>
+									<div class="d-flex">
+										<a class="btn btn-light"
+											th:href="@{/client/cart/remove-cart-item/{id} (id=${cartItem.id})}">-</a>
+										<input style="width: fit-content;"
+											class=" form-control border-0 shadow-none text-center bg-white"
+											disabled="disabled" th:value="${cartItem.quantity}">
+										<a class="btn btn-light"
+											th:href="@{/client/cart/add-cart-item/{id} (id=${cartItem.id})}">+</a>
+									</div>
+								</td> -->
+								<td 
+									th:text="${#numbers.formatDecimal(cartItem.room.price, 1, 'COMMA', 0, 'POINT')} + 'VND'">Price</td>
+								<td> </td>
+								<td><a
+									th:href="@{/client/cart/delete-cart-item/{id} (id=${cartItem.id})}"
+									class="btn btn-outline-danger  ">Xóa</a></td>
+							</tr>
+
+
+
+
+
+
+
+							<tr th:each="cartItem : ${cartItems}" 
+								
+								th:if="${cartItem.service != null}">
+								<td th:text="${cartItem.service.name}">Name</td>
+<td
+									th:text="${#numbers.formatDecimal(cartItem.service.price * cartItem.quantity , 1, 'COMMA', 0, 'POINT')} + 'VND'">Price</td>
+								<td>
+									<div class="d-flex">
+										<a class="btn btn-light"
+											th:href="@{/client/cart/remove-cart-item/{id} (id=${cartItem.id})}">-</a>
+										<input style="width: fit-content;"
+											class=" form-control border-0 shadow-none text-center bg-white"
+											disabled="disabled" th:value="${cartItem.quantity}">
+										<a class="btn btn-light"
+											th:href="@{/client/cart/add-cart-item/{id} (id=${cartItem.id})}">+</a>
+									</div>
+								</td>
+								
+								<td><a
+									th:href="@{/client/cart/delete-cart-item/{id} (id=${cartItem.id})}"
+									class="btn btn-outline-danger  ">Xóa</a>
+									
+									<button type="button" class="btn btn-outline-primary p-1"
+							data-toggle="modal" 
+							th:attr="data-target='#exampleModalCenter' + ${cartItem.id}">Ghi chú</button> <!-- Modal -->
+									
+									<form method="post" action="/client/cart/save-service-note">
+							<div class="modal fade"
+								th:id="'exampleModalCenter' + ${cartItem.id}" tabindex="-1"
+								role="dialog" aria-labelledby="exampleModalCenterTitle"
+								aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+
+										<div class="modal-body">
+											<input name="id" th:value="${cartItem.id}" hidden>
+
+											  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Viết ghi chú cho dịch vụ <span class="font-weight-bold" th:text="${cartItem.service.name}"></span> </label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="note" th:text="${cartItem.note}"></textarea>
+    
+  </div>
+											
+
+										</div>
+										<div class="modal-footer border-top-0">
+											<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">Hủy</button>
+											<button type="submit" class="btn btn-primary">Lưu ghi chú</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+									
+									
+									</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<hr>
+					<div class="d-flex justify-content-between">  
+					<a class="btn btn-outline-danger" th:href="@{/client/cart/delete-all-cart-item}"> Xóa tất cả</a>
+					
+					<div class="d-flex justify-content-end align-items-center">
+						<span class="font-weight-bold  mr-2">Tổng:</span> <Span
+							class="mr-2" style="font-size: 20px"
+							th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 0, 'POINT')} + 'VND'">10000</Span>
+						<button type="button" class="btn btn-success" data-toggle="modal"
+							data-target="#exampleModalCenter">Thanh toán</button>
+
+						<!-- Modal -->
+						<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalCenterTitle"
+							aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+
+									<div class="modal-body">
+										<div class="d-flex justify-content-between">
+											<p>Ngày nhận phòng</p>
+											<span th:text="${#dates.format(cart.startDate, 'dd/MM/yyyy')}">21</span>
+										</div>
+										<div class="d-flex justify-content-between">
+											<p>Ngày thả phòng</p>
+											<span th:text="${#dates.format(cart.endDate, 'dd/MM/yyyy')}">21</span>
+										</div>
+										<p class="font-weight-bold " style="font-size: 20px;">Phòng
+											đã chọn</p>
+										<div class="d-flex justify-content-between" th:each="cartItem : ${cartItems}" th:if="${cartItem.room != null}">
+											<p>
+												<text th:text="${cartItem.room.name}">Phòng</text>
+												
+											</p>
+											<span th:text="${#numbers.formatDecimal(cartItem.room.price, 1, 'COMMA', 0, 'POINT')} + 'VND'" >21</span>
+										</div>
+										<p class="font-weight-bold " style="font-size: 20px;">Dịch vụ đã chọn</p>
+										<div class="d-flex justify-content-between" th:each="cartItem : ${cartItems}" th:if="${cartItem.service != null}">
+											<p>
+												<text th:text="${cartItem.service.name}"></text>
+												x
+												<text th:text="${cartItem.quantity}"></text>
+											</p>
+											<small th:text="'Ghi chú: ' + ${cartItem.note}"></small>
+											
+											
+											<span  th:text="${#numbers.formatDecimal(cartItem.service.price * cartItem.quantity , 1, 'COMMA', 0, 'POINT')} + 'VND'">21</span>
+										</div>
+										<hr>
+										<div class="d-flex justify-content-end">
+										<span style="font-size: 19px" class="text-success" th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 0, 'POINT')} + 'VND'">0</span>
+										</div>
+									</div>
+									<div class="modal-footer border-top-0">
+										<button type="button" class="btn btn-secondary"
+											data-dismiss="modal">Hủy</button>
+										<a href="/client/payment/to-payment" class="btn btn-success">Thanh
+											toán</a>
+											
+											
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					</div>
+					
+				</div>
+			</div>
+
+
+			<div class="col-lg-12 col-md-12">
+				<div class="p-2 rounded border shadow-sm">
+					<h5 class="font-weight-bold mb-2">Phòng khách sạn</h5>
+					<div
+						class="border d-flex justify-content-between align-items-center mb-2"
+						th:each="room : ${rooms}" th:if="${room.status == 'EMPTY'}">
+
+						<div class="d-flex">
+							<th:block th:switch="${room.type}">
+								<img th:case="SINGLE" src="/client/img/room/room-1.jpg" alt=""
+									style="height: 80px;">
+								<img th:case="COUPLE" src="/client/img/room/room-2.jpg" alt=""
+									style="height: 80px;">
+								<img th:case="FAMILY" src="/client/img/room/room-3.jpg" alt=""
+									style="height: 80px;">
+								<img th:case="LUXURY" src="/client/img/room/room-4.jpg" alt=""
+									style="height: 80px;">
+							</th:block>
+							<div class="pl-2">
+								<p class="m-0">
+									<a class="font-weight-bolder">Giá phòng:</a> <span
+										th:text="${#numbers.formatDecimal(room.price, 1, 'COMMA', 0, 'POINT')} + 'VND'"></span>
+								</p>
+								<p class="m-0">
+									<a class="font-weight-bolder">Loại phòng:</a>
+
+									<th:block th:switch="${room.type}">
+										<span th:case="SINGLE">Phòng Đơn</span>
+										<span th:case="COUPLE">Phòng Đôi</span>
+										<span th:case="FAMILY">Phòng Gia Đình</span>
+										<span th:case="LUXURY">Phòng King Cao Cấp</span>
+									</th:block>
+								</p>
+								<p class="m-0">
+									<a class="font-weight-bolder">giường:</a>
+									<th:block th:switch="${room.type}">
+										<span th:case="SINGLE">Giường King</span>
+										<span th:case="COUPLE">Giường King</span>
+										<span th:case="FAMILY">Giường King</span>
+										<span th:case="LUXURY">Giường cao cấp sang trọng</span>
+									</th:block>
+								</p>
+							</div>
+
+						</div>
+						<div class="pr-2 ">
+							<a class="btn btn-outline-primary "
+								th:href="@{/client/cart/add-room-to-cart/{id} (id=${room.id})}">Thêm
+								phòng</a>
+						</div>
+					</div>
+
+
+
+
+					<h5 class="font-weight-bold mb-2">Dịch vụ</h5>
+
+					<div
+						class="border d-flex justify-content-between align-items-center mb-2"
+						th:each="service : ${services}">
+
+						<div class="d-flex">
+
+							<div class="pl-2">
+								<p class="m-0">
+									<a class="font-weight-bolder">Tên dịch vụ:</a> <span
+										th:text="${service.name}">1000</span>
+								</p>
+								<p class="m-0">
+									<a class="font-weight-bolder">Giá dịch vụ:</a> <span
+										th:text="${#numbers.formatDecimal(service.price, 1, 'POINT', 0, 'COMMA')} + 'VND'">1000</span>
+								</p>
+
+
+							</div>
+
+						</div>
+						<div class="pr-2 ">
+							<a
+								th:href="@{/client/cart/add-service-to-cart/{id} (id=${service.id})}"
+								class="btn btn-outline-primary ">Thêm dịch vụ</a>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+
+
+
+		</div>
+
+		<!--  <div class="col-md-12">
+            <a href="/client/logs/" class="w-100 btn btn-success" type="button">Đã thanh toán</a>
+        </div> -->
+	</div>
+
+
+	<th:block th:insert="~{/client/fragments :: toasts}"></th:block>
+
+	<th:block th:insert="~{/client/fragments :: footer-elm}"></th:block>
+
+	<!-- Js Plugins -->
+	<th:block th:insert="~{/client/fragments :: script-tags}"></th:block>
+
+</body>
+
+</html>
